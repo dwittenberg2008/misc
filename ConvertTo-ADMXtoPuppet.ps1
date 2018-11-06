@@ -161,6 +161,8 @@ function ConvertTo-ADMXtoPuppet
                 '    }' | out-file -FilePath $outputFile -Append -Encoding unicode
                 ''  | out-file -FilePath $outputFile -Append -Encoding unicode
             }
+            '}'  | out-file -FilePath $outputFile -Append -Encoding unicode
+            ''  | out-file -FilePath $outputFile -Append -Encoding unicode
         }
     } #begin
     
