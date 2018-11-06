@@ -69,6 +69,10 @@ function ConvertTo-ADMXtoPuppet
             
             $policies += Recurse_PolicyKeys -key "HKLM\Software\Microsoft\Windows NT\CurrentVersion" -gpo $gpo
             
+            $policies += Recurse_PolicyKeys -key "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies" -gpo $gpo
+          
+            $policies += Recurse_PolicyKeys -key "HKLM\System\CurrentControlSet\Policies" -gpo $gpo
+
             # build the DSC configuration doc
             GenConfigDoc -path $path -gpo $gpo -policies $policies
             # add error/debug and verbose.
@@ -190,4 +194,6 @@ function ConvertTo-ADMXtoPuppet
         Write-Verbose "Ending: $($MyInvocation.Mycommand)"
     } #end
 }
+
+
 
