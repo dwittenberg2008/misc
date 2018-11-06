@@ -130,7 +130,14 @@ function ConvertTo-ADMXtoPuppet
             $gpo = $gpo -replace "__","_"
             $outputFile = "$path\${gpo}.pp"
             Write-Verbose "Saving config to $outputFile"
-            
+           
+            '# Auto-generated GPO settings' | out-file -FilePath $outputFile -Append -Encoding unicode
+            '#' | out-file -FilePath $outputFile -Append -Encoding unicode
+            '# @summary Auto-generated GPO settings' | out-file -FilePath $outputFile -Append -Encoding unicode
+            '#' | out-file -FilePath $outputFile -Append -Encoding unicode
+            '# @example' | out-file -FilePath $outputFile -Append -Encoding unicode
+            "#   include module::gpo_${gpo}" | out-file -FilePath $outputFile -Append -Encoding unicode
+            "class  gpo_${gpo} {" | out-file -FilePath $outputFile -Append -Encoding unicode
         
             foreach ($regItem in $policies)
             {
@@ -154,13 +161,13 @@ function ConvertTo-ADMXtoPuppet
                 # exploring other ways to create the resource info.
                 # added unicode encoding to valuename and data to support that type for certain policies (e.g. SRP/Applocker)
                 "    dsc_registry { '" + $resourceName + "':"| out-file -FilePath $outputFile -Append -Encoding unicode
-                "      dsc_ensure    => 'Present'" | out-file -FilePath $outputFile -Append -Encoding unicode
-                "      dsc_key       => '"+ $regItem.FullKeyPath + "'"| out-file -FilePath $outputFile -Append -Encoding unicode
-                "      dsc_valueName => '" + $regItem.ValueName + "'" | out-file -FilePath $outputFile -Append -Encoding unicode
-                "      dsc_valueType => '" +$regItem.Type + "'" | out-file -FilePath $outputFile -Append -Encoding unicode
+                "      dsc_ensure    => 'Present'," | out-file -FilePath $outputFile -Append -Encoding unicode
+                "      dsc_key       => '"+ $regItem.FullKeyPath + "',"| out-file -FilePath $outputFile -Append -Encoding unicode
+                "      dsc_valueName => '" + $regItem.ValueName + "'," | out-file -FilePath $outputFile -Append -Encoding unicode
+                "      dsc_valueType => '" +$regItem.Type + "'," | out-file -FilePath $outputFile -Append -Encoding unicode
                 # need to trim any nul characters from ValueData (mostly an Applocker issue)
                 $trimValue = $regItem.Value.ToString().Trim("`0")
-                "      dsc_valueData => '" +$trimValue + "'"| out-file -FilePath $outputFile -Append -Encoding unicode
+                "      dsc_valueData => '" +$trimValue + "',"| out-file -FilePath $outputFile -Append -Encoding unicode
                 '    }' | out-file -FilePath $outputFile -Append -Encoding unicode
                 ''  | out-file -FilePath $outputFile -Append -Encoding unicode
             }
