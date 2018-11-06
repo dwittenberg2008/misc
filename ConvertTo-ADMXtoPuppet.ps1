@@ -124,8 +124,11 @@ function ConvertTo-ADMXtoPuppet
 
              Write-Verbose "Starting: $($MyInvocation.Mycommand)" 
             #parse the spaces out of the GPO name, since we use it for the Configuration name
-            $gpo = $gpo -replace " ","_"
-            $outputFile = "$path\$gpo.pp"
+            $gpo = ($gpo -replace " ","_").toLower()
+            $gpo = $gpo -replace "-","_"
+            $gpo = $gpo -replace "___","_"
+            $gpo = $gpo -replace "__","_"
+            $outputFile = "$path\${gpo}.pp"
             Write-Verbose "Saving config to $outputFile"
             
         
